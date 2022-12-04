@@ -1,7 +1,6 @@
 const ELVES: &str = include_str!("../data/input.txt");
 
 fn main() {
-    println!("Hello, world!");
     let mut elves = vec![0];
     elves.push(0);
     for line in ELVES.lines() {
