@@ -44,6 +44,11 @@ impl Move {
     }
 }
 fn main() {
+    part_1();
+    part_2();
+}
+
+fn part_1() {
     let mut arr: [Vec<Crate>; NR_OF_STACKS] = Default::default();
     let split = SCHEDULE.split_once("\n\n").unwrap();
     for line in split.0.lines().rev().skip(1) {
@@ -61,6 +66,38 @@ fn main() {
                 arr[next_move.destination - 1].push(moving);
             }
         }
+    }
+
+    for a in arr.iter() {
+        print!("{}", a.last().unwrap().id);
+    }
+    println!()
+}
+fn part_2() {
+    let mut arr: [Vec<Crate>; NR_OF_STACKS] = Default::default();
+    let split = SCHEDULE.split_once("\n\n").unwrap();
+    for line in split.0.lines().rev().skip(1) {
+        for (n, a) in arr.iter_mut().enumerate() {
+            let token: &str = &line.chars().skip(4 * n).take(3).collect::<String>();
+            if !token.trim().is_empty() {
+                a.push(Crate::new(token))
+            }
+        }
+    }
+    for line in split.1.lines() {
+        let next_move = Move::new(line);
+        let mut pool:Vec<Crate> = Vec::new();
+        for _ in 0..next_move.amount {
+            if let Some(moving) = arr[next_move.source - 1].pop() {
+                pool.push(moving);
+            }
+        }
+        for _ in 0..next_move.amount
+        {
+            let temp = pool.pop().unwrap();
+            arr[next_move.destination - 1].push(temp);
+        }
+        assert!(pool.is_empty());
     }
 
     for a in arr.iter() {
